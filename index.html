@@ -53,22 +53,28 @@
 
         .main-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 20px; }
 
+        /* كارت Payload Menu بصورتك الجديدة */
         .payload-card {
-            background: linear-gradient(180deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.9));
-            border: 1px solid #3b82f6;
+            background: linear-gradient(rgba(11, 15, 25, 0.4), rgba(11, 15, 25, 0.7)), url('goldhen-user.jpg') no-repeat center center;
+            background-size: cover;
+            border: 2px solid #3b82f6;
             border-radius: 16px;
             padding: 30px 20px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-end;
             align-items: center;
+            min-height: 290px;
+            position: relative;
+            overflow: hidden;
         }
-        .payload-card:hover { transform: translateY(-5px); border-color: #60a5fa; box-shadow: 0 0 25px rgba(96, 165, 250, 0.6); background: #1d4ed8; }
-        .payload-icon { font-size: 3rem; margin-bottom: 10px; color: #38bdf8; }
+        .payload-card:hover { transform: translateY(-5px); border-color: #60a5fa; box-shadow: 0 0 30px rgba(96, 165, 250, 0.8); }
+        .payload-card h2 { color: #ffffff; text-shadow: 0 0 10px #000; font-size: 1.5rem; }
+        .payload-card p { color: #38bdf8; text-shadow: 0 0 8px #000; font-weight: bold; margin-top: 5px; }
 
         .games-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
         .game-card { position: relative; background: #1e293b; border-radius: 12px; overflow: hidden; border: 1px solid #334155; height: 140px; cursor: pointer; transition: transform 0.3s ease, border-color 0.3s ease; }
@@ -105,11 +111,10 @@
 
         <!-- Main Content -->
         <div class="main-grid">
-        <!-- Left Side: GoldHEN Trigger Button (with your new image) -->
-            <div class="payload-card" onclick="triggerGoldhen()" style="background-image: url('goldhen-user.jpg'); background-size: cover; background-position: center; border-color: rgba(96, 165, 250, 0.5);">
-                <div class="payload-overlay"></div> <!-- طبقة مظلمة لجعل النص واضحاً -->
-                <h2 style="position: relative; z-index: 2;">PAYLOAD MENU</h2>
-                <p style="color: #cbd5e1; margin-top: 8px; position: relative; z-index: 2;">تفعيل GoldHEN v2.4b18.10</p>
+            <!-- Left Side: GoldHEN Trigger Button (مع صورتك كخلفية) -->
+            <div class="payload-card" onclick="triggerGoldhen()">
+                <h2>PAYLOAD MENU</h2>
+                <p>تفعيل GoldHEN v2.4b18.10</p>
             </div>
 
             <!-- Right Side: Game Cards -->
@@ -147,7 +152,6 @@
             document.getElementById('status-text').innerText = "جاري تفعيل GoldHEN... يرجى الانتظار";
             document.getElementById('notification').innerText = "تم إرسال حمولة GoldHEN بنجاح!";
             
-            // تشغيل ملف goldhen.bin المرفوع
             setTimeout(function() {
                 location.href = "goldhen.bin";
             }, 500);
@@ -157,7 +161,6 @@
             document.getElementById('status-text').innerText = "جاري تحميل: " + name;
         }
 
-        // إدارة التخزين المؤقت أوفلاين (Application Cache)
         if (window.applicationCache) {
             window.applicationCache.addEventListener('cached', function() {
                 document.getElementById('status-text').innerText = "تم تخزين الهوست في الكاش بنجاح! يعمل الآن 100% بدون إنترنت.";
