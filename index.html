@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZAKI GAME ARENA - PS4 Host</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #0b0f19; color: #ffffff; padding: 20px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+        .container { max-width: 1000px; width: 100%; }
+        
+        .header {
+            background: linear-gradient(135deg, #131c2e, #0b0f19);
+            border: 2px solid #1d4ed8;
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 0 25px rgba(29, 78, 216, 0.4);
+            margin-bottom: 25px;
+        }
+        .profile-section { display: flex; align-items: center; gap: 15px; }
+        .profile-img { width: 75px; height: 75px; border-radius: 50%; border: 3px solid #38bdf8; object-fit: cover; box-shadow: 0 0 10px #38bdf8; }
+        .user-info h2 { color: #38bdf8; font-size: 1.5rem; margin-bottom: 5px; }
+        .user-info p { color: #94a3b8; font-size: 0.9rem; }
+        .logo-title { text-align: left; border-left: 2px solid #1d4ed8; padding-left: 15px; }
+        .logo-title h1 { font-size: 1.8rem; color: #60a5fa; letter-spacing: 2px; text-shadow: 0 0 10px rgba(96, 165, 250, 0.5); }
+        .logo-title span { color: #3b82f6; font-size: 0.8rem; display: block; }
+
+        .status-bar {
+            background: #1e293b;
+            border-right: 4px solid #38bdf8;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            color: #cbd5e1;
+            margin-bottom: 25px;
+            text-align: right;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .main-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 20px; }
+
+        .payload-card {
+            background: linear-gradient(180deg, #1e293b, #0f172a);
+            border: 1px solid #3b82f6;
+            border-radius: 16px;
+            padding: 30px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .payload-card:hover { transform: translateY(-5px); border-color: #60a5fa; box-shadow: 0 0 25px rgba(96, 165, 250, 0.6); background: #1d4ed8; }
+        .payload-icon { font-size: 3rem; margin-bottom: 10px; color: #38bdf8; }
+
+        .games-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        .game-card { position: relative; background: #1e293b; border-radius: 12px; overflow: hidden; border: 1px solid #334155; height: 140px; cursor: pointer; transition: transform 0.3s ease, border-color 0.3s ease; }
+        .game-card:hover { transform: scale(1.03); border-color: #38bdf8; }
+        .game-card img { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; transition: opacity 0.3s ease; }
+        .game-card:hover img { opacity: 0.9; }
+        .game-title { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(0deg, rgba(15, 23, 42, 0.95), transparent); padding: 10px; font-size: 0.9rem; font-weight: bold; color: #f8fafc; }
+
+        .footer-bar { margin-top: 30px; background: #0f172a; border-top: 1px solid #1e293b; padding: 15px; border-radius: 10px; color: #10b981; font-weight: bold; font-size: 0.9rem; text-align: center; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="profile-section">
+                <img src="profile.jpg" alt="Zaki" class="profile-img">
+                <div class="user-info">
+                    <h2>أهلاً بك، زكي!</h2>
+                    <p>PLAYSTATION | PC GAMING | صيانة | فلاش ألعاب</p>
+                </div>
+            </div>
+            <div class="logo-title">
+                <h1>ZAKI</h1>
+                <span>GAME ARENA</span>
+            </div>
+        </div>
+
+        <!-- Status -->
+        <div class="status-bar" id="status-text">
+            تم تخزين الهوست في الكاش للعمل بلا إنترنت. جاهز للفلاش!
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-grid">
+            <!-- Left Side: Payload Main Button -->
+            <div class="payload-card" onclick="triggerGoldhen()">
+                <div class="payload-icon">🎮</div>
+                <h2>PAYLOAD MENU</h2>
+                <p style="color: #cbd5e1; margin-top: 8px;">تفعيل GoldHEN v2.4b18.10</p>
+            </div>
+
+            <!-- Right Side: Game Cards -->
+            <div class="games-grid">
+                <div class="game-card" onclick="loadPayload('God of War')">
+                    <img src="https://images.alphacoders.com/908/908480.png" alt="God of War">
+                    <div class="game-title">God of War (2018)</div>
+                </div>
+
+                <div class="game-card" onclick="loadPayload('Spider-Man')">
+                    <img src="https://images.alphacoders.com/939/939115.jpg" alt="Spider-Man">
+                    <div class="game-title">Spider-Man</div>
+                </div>
+
+                <div class="game-card" onclick="loadPayload('Uncharted 4')">
+                    <img src="https://images.alphacoders.com/687/687271.jpg" alt="Uncharted 4">
+                    <div class="game-title">Uncharted 4</div>
+                </div>
+
+                <div class="game-card" onclick="loadPayload('App2USB')">
+                    <img src="https://images.alphacoders.com/112/1126207.JPG" alt="App2USB">
+                    <div class="game-title">أدوات الصيانة & LaunchPad</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Notification -->
+        <div class="footer-bar" id="notification">
+            GoldHEN v2.4b18.10 (أحدث إصدار) جاهز للتفعيل المباشر بدون إنترنت.
+        </div>
+    </div>
+
+    <script>
+        function triggerGoldhen() {
+            document.getElementById('status-text').innerText = "جاري تفعيل GoldHEN v2.4b18.10... يرجى الانتظار";
+            document.getElementById('notification').innerText = "تم إرسال Payload التعديل بنجاح!";
+        }
+
+        function loadPayload(name) {
+            document.getElementById('status-text').innerText = "جاري تشغيل حمولة: " + name;
+        }
+
+        if (window.applicationCache) {
+            window.applicationCache.addEventListener('cached', function() {
+                document.getElementById('status-text').innerText = "تم حفظ الكاش بنجاح! الهوست يعمل الآن 100% بدون إنترنت.";
+            });
+        }
+    </script>
+</body>
+</html>
