@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" manifest="cache.manifest">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +7,6 @@
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
-        /* إضافة صورة الخلفية bg.jpg هنا */
         body { 
             background: #0b0f19 url('bg.jpg') no-repeat center center fixed; 
             background-size: cover; 
@@ -99,14 +98,14 @@
             </div>
         </div>
 
-        <!-- Status -->
+        <!-- Status Bar -->
         <div class="status-bar" id="status-text">
-            تم تخزين الهوست في الكاش للعمل بلا إنترنت. جاهز للفلاش!
+            جاري التحقق من حالة الكاش والأوفلاين...
         </div>
 
         <!-- Main Content -->
         <div class="main-grid">
-            <!-- Left Side: Payload Main Button -->
+            <!-- Left Side: GoldHEN Trigger Button -->
             <div class="payload-card" onclick="triggerGoldhen()">
                 <div class="payload-icon">🎮</div>
                 <h2>PAYLOAD MENU</h2>
@@ -145,17 +144,29 @@
 
     <script>
         function triggerGoldhen() {
-            document.getElementById('status-text').innerText = "جاري تفعيل GoldHEN v2.4b18.10... يرجى الانتظار";
-            document.getElementById('notification').innerText = "تم إرسال Payload التعديل بنجاح!";
+            document.getElementById('status-text').innerText = "جاري تفعيل GoldHEN... يرجى الانتظار";
+            document.getElementById('notification').innerText = "تم إرسال حمولة GoldHEN بنجاح!";
+            
+            // تشغيل ملف goldhen.bin المرفوع
+            setTimeout(function() {
+                location.href = "goldhen.bin";
+            }, 500);
         }
 
         function loadPayload(name) {
-            document.getElementById('status-text').innerText = "جاري تشغيل حمولة: " + name;
+            document.getElementById('status-text').innerText = "جاري تحميل: " + name;
         }
 
+        // إدارة التخزين المؤقت أوفلاين (Application Cache)
         if (window.applicationCache) {
             window.applicationCache.addEventListener('cached', function() {
-                document.getElementById('status-text').innerText = "تم حفظ الكاش بنجاح! الهوست يعمل الآن 100% بدون إنترنت.";
+                document.getElementById('status-text').innerText = "تم تخزين الهوست في الكاش بنجاح! يعمل الآن 100% بدون إنترنت.";
+            });
+            window.applicationCache.addEventListener('noupdate', function() {
+                document.getElementById('status-text').innerText = "الهوست مخزن ومحين في الكاش. جاهز للعمل أوفلاين!";
+            });
+            window.applicationCache.addEventListener('downloading', function() {
+                document.getElementById('status-text').innerText = "جاري حفظ ملفات الهوست للعمل بدون إنترنت...";
             });
         }
     </script>
