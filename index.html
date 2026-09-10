@@ -53,28 +53,43 @@
 
         .main-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 20px; }
 
-        /* كارت Payload Menu بصورتك الجديدة */
+        /* كارت Payload Menu المعدل لعرض الصورة المباشرة */
         .payload-card {
-            background: linear-gradient(rgba(11, 15, 25, 0.4), rgba(11, 15, 25, 0.7)), url('goldhen-user.jpg') no-repeat center center;
-            background-size: cover;
+            position: relative;
+            background: #1e293b;
             border: 2px solid #3b82f6;
             border-radius: 16px;
-            padding: 30px 20px;
-            text-align: center;
+            overflow: hidden;
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+            height: 295px;
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
-            align-items: center;
-            min-height: 290px;
-            position: relative;
-            overflow: hidden;
         }
         .payload-card:hover { transform: translateY(-5px); border-color: #60a5fa; box-shadow: 0 0 30px rgba(96, 165, 250, 0.8); }
-        .payload-card h2 { color: #ffffff; text-shadow: 0 0 10px #000; font-size: 1.5rem; }
-        .payload-card p { color: #38bdf8; text-shadow: 0 0 8px #000; font-weight: bold; margin-top: 5px; }
+        .payload-card img.bg-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.75;
+            transition: opacity 0.3s ease;
+        }
+        .payload-card:hover img.bg-img { opacity: 0.95; }
+        .payload-content {
+            position: relative;
+            z-index: 2;
+            background: linear-gradient(0deg, rgba(11, 15, 25, 0.95) 20%, transparent);
+            padding: 20px 15px 15px 15px;
+            text-align: center;
+            width: 100%;
+        }
+        .payload-content h2 { color: #ffffff; text-shadow: 0 0 10px #000; font-size: 1.4rem; }
+        .payload-content p { color: #38bdf8; text-shadow: 0 0 8px #000; font-weight: bold; margin-top: 4px; font-size: 0.95rem; }
 
         .games-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
         .game-card { position: relative; background: #1e293b; border-radius: 12px; overflow: hidden; border: 1px solid #334155; height: 140px; cursor: pointer; transition: transform 0.3s ease, border-color 0.3s ease; }
@@ -111,10 +126,13 @@
 
         <!-- Main Content -->
         <div class="main-grid">
-            <!-- Left Side: GoldHEN Trigger Button (مع صورتك كخلفية) -->
+            <!-- Left Side: GoldHEN Trigger Button مع صورتك المباشرة -->
             <div class="payload-card" onclick="triggerGoldhen()">
-                <h2>PAYLOAD MENU</h2>
-                <p>تفعيل GoldHEN v2.4b18.10</p>
+                <img src="goldhen-user.jpg" alt="Zaki GoldHEN" class="bg-img">
+                <div class="payload-content">
+                    <h2>PAYLOAD MENU</h2>
+                    <p>تفعيل GoldHEN v2.4b18.10</p>
+                </div>
             </div>
 
             <!-- Right Side: Game Cards -->
