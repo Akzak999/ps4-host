@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZAKI GAME ARENA - PS4 Host</title>
+    <title>ZAKI GAME ARENA - PS4 Host (13.00)</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
@@ -39,6 +39,25 @@
         .logo-title h1 { font-size: 1.8rem; color: #60a5fa; letter-spacing: 2px; text-shadow: 0 0 10px rgba(96, 165, 250, 0.5); }
         .logo-title span { color: #3b82f6; font-size: 0.8rem; display: block; }
 
+        .exploit-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .exploit-btn {
+            flex: 1;
+            padding: 12px;
+            background: #1e293b;
+            border: 1px solid #334155;
+            color: #fff;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+        .exploit-btn.active, .exploit-btn:hover { background: #1d4ed8; border-color: #60a5fa; font-weight: bold; }
+
         .status-bar {
             background: rgba(30, 41, 59, 0.9);
             border-right: 4px solid #38bdf8;
@@ -53,7 +72,6 @@
 
         .main-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 20px; }
 
-        /* كارت Payload Menu المعدل لعرض الصورة المباشرة */
         .payload-card {
             position: relative;
             background: #1e293b;
@@ -89,7 +107,7 @@
             width: 100%;
         }
         .payload-content h2 { color: #ffffff; text-shadow: 0 0 10px #000; font-size: 1.4rem; }
-        .payload-content p { color: #38bdf8; text-shadow: 0 0 8px #000; font-weight: bold; margin-top: 4px; font-size: 0.95rem; }
+        .payload-content p { color: #38bdf8; text-shadow: 0 0 8px #000; font-weight: bold; margin-top: 4px; font-size: 0.85rem; }
 
         .games-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
         .game-card { position: relative; background: #1e293b; border-radius: 12px; overflow: hidden; border: 1px solid #334155; height: 140px; cursor: pointer; transition: transform 0.3s ease, border-color 0.3s ease; }
@@ -119,6 +137,13 @@
             </div>
         </div>
 
+        <!-- Exploit Type Selector -->
+        <div class="exploit-selector">
+            <div class="exploit-btn active" onclick="selectExploit('AUTO', this)">تلقائي (Web / Old FW)</div>
+            <div class="exploit-btn" onclick="selectExploit('LAPSE', this)">LAPSE (<= 11.50)</div>
+            <div class="exploit-btn" onclick="selectExploit('POOPS', this)">POOPS (>= 11.52)</div>
+        </div>
+
         <!-- Status Bar -->
         <div class="status-bar" id="status-text">
             جاري التحقق من حالة الكاش والأوفلاين...
@@ -126,12 +151,12 @@
 
         <!-- Main Content -->
         <div class="main-grid">
-            <!-- Left Side: GoldHEN Trigger Button مع صورتك المباشرة -->
+            <!-- Left Side: GoldHEN Trigger Button -->
             <div class="payload-card" onclick="triggerGoldhen()">
                 <img src="goldhen-user.jpg" alt="Zaki GoldHEN" class="bg-img">
                 <div class="payload-content">
                     <h2>PAYLOAD MENU</h2>
-                    <p>تفعيل GoldHEN v2.4b18.10</p>
+                    <p id="exploit-mode-text">تفعيل GoldHEN (من 5.05 إلى 13.00)</p>
                 </div>
             </div>
 
@@ -161,13 +186,33 @@
 
         <!-- Footer Notification -->
         <div class="footer-bar" id="notification">
-            GoldHEN v2.4b18.10 (الإصدارات المدعومة من 5.05 إلى 11.00) جاهز للتفعيل.
+            GoldHEN جاهز للتفعيل (LAPSE للتحديثات <= 11.50 | POOPS للتحديثات >= 11.52).
         </div>
     </div>
 
     <script>
+        let currentMode = "AUTO";
+
+        function selectExploit(mode, btn) {
+            currentMode = mode;
+            let btns = document.querySelectorAll('.exploit-btn');
+            btns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            if(mode === 'LAPSE') {
+                document.getElementById('exploit-mode-text').innerText = "وضع LAPSE (التحديثات 11.50 فما تحت)";
+                document.getElementById('status-text').innerText = "تم تجهيز ثغرة LAPSE للتحديثات <= 11.50.";
+            } else if(mode === 'POOPS') {
+                document.getElementById('exploit-mode-text').innerText = "وضع POOPS (التحديثات 11.52 فما فوق)";
+                document.getElementById('status-text').innerText = "تم تجهيز ثغرة POOPS للتحديثات >= 11.52.";
+            } else {
+                document.getElementById('exploit-mode-text').innerText = "تفعيل GoldHEN (من 5.05 إلى 13.00)";
+                document.getElementById('status-text').innerText = "وضع التشغيل التلقائي عبر المتصفح.";
+            }
+        }
+
         function triggerGoldhen() {
-            document.getElementById('status-text').innerText = "جاري تفعيل GoldHEN... يرجى الانتظار";
+            document.getElementById('status-text').innerText = "جاري تفعيل GoldHEN بواسطة " + currentMode + "... يرجى الانتظار";
             document.getElementById('notification').innerText = "تم إرسال حمولة GoldHEN بنجاح!";
             
             setTimeout(function() {
