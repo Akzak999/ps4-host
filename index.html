@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZAKI GAME ARENA - PS4 Host (Direct Exploit)</title>
+    <title>ZAKI GAME ARENA - PS4 Auto-Detect Host</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
@@ -45,7 +45,6 @@
             margin-bottom: 15px;
         }
         
-        /* أزرار مخصصة للتحكم باليد */
         .exploit-btn {
             flex: 1;
             padding: 12px;
@@ -95,6 +94,7 @@
             flex-direction: column;
             justify-content: flex-end;
             outline: none;
+            width: 100%;
         }
 
         .payload-card:focus, .payload-card:hover {
@@ -139,6 +139,7 @@
             cursor: pointer;
             transition: transform 0.3s ease, border-color 0.3s ease;
             outline: none;
+            width: 100%;
         }
 
         .game-card:focus, .game-card:hover {
@@ -172,16 +173,16 @@
             </div>
         </div>
 
-        <!-- Exploit Selector (أزرار حقيقية تدعم ضغط X) -->
+        <!-- Exploit Selector Buttons -->
         <div class="exploit-selector">
-            <button class="exploit-btn active" onclick="selectExploit('AUTO', this)">تلقائي (Web Browser)</button>
-            <button class="exploit-btn" onclick="selectExploit('LAPSE', this)">LAPSE (11.50 وأقل)</button>
-            <button class="exploit-btn" onclick="selectExploit('POOPS', this)">POOPS (11.52 وأعلى)</button>
+            <button id="btn-auto" class="exploit-btn active" onclick="selectExploit('AUTO', this)">تلقائي (Auto Detect)</button>
+            <button id="btn-lapse" class="exploit-btn" onclick="selectExploit('LAPSE', this)">LAPSE (11.50 وأقل)</button>
+            <button id="btn-poops" class="exploit-btn" onclick="selectExploit('POOPS', this)">POOPS (11.52 وأعلى)</button>
         </div>
 
         <!-- Status Bar -->
         <div class="status-bar" id="status-text">
-            جاهز للتفعيل المباشر... اختر الوضع واضغط على GoldHEN.
+            جاري فحص إصدار نظام الـ PS4...
         </div>
 
         <!-- Main Content -->
@@ -191,7 +192,7 @@
                 <img src="goldhen-user.jpg" alt="Zaki GoldHEN" class="bg-img">
                 <div class="payload-content">
                     <h2>PAYLOAD MENU</h2>
-                    <p id="exploit-mode-text">تفعيل GoldHEN مباشر بدون USB</p>
+                    <p id="exploit-mode-text">تفعيل GoldHEN مباشر</p>
                 </div>
             </button>
 
@@ -221,74 +222,72 @@
 
         <!-- Footer Notification -->
         <div class="footer-bar" id="notification">
-            تفعيل مباشر بدون USB (حقن الذاكرة الداخلي عبر السكربت).
+            تم التعرف على النظام تلقائياً. اضغط على GoldHEN للبدء.
         </div>
     </div>
 
     <script>
+        let detectedFW = "Unknown";
         let currentMode = "AUTO";
+
+        // دالة الفحص التلقائي لإصدار النظام من متصفح PS4
+        function detectPS4Firmware() {
+            let ua = navigator.userAgent;
+            let match = ua.match(/PlayStation 4 ([0-9\.]+)/);
+            
+            if (match && match[1]) {
+                detectedFW = match[1];
+                let fwNum = parseFloat(detectedFW);
+                
+                let status = "تم اكتشاف الجهاز: PS4 (إصدار النظام: " + detectedFW + ") - ";
+                
+                if (fwNum <= 11.50) {
+                    status += "الوضع الموصى به: LAPSE";
+                    selectExploit('LAPSE', document.getElementById('btn-lapse'));
+                } else {
+                    status += "الوضع الموصى به: POOPS";
+                    selectExploit('POOPS', document.getElementById('btn-poops'));
+                }
+                
+                document.getElementById('status-text').innerText = status;
+            } else {
+                document.getElementById('status-text').innerText = "تم فتح الموقع من جهاز آخر/كمبيوتر. يرجى الفتح من متصفح الـ PS4.";
+            }
+        }
 
         function selectExploit(mode, btn) {
             currentMode = mode;
             let btns = document.querySelectorAll('.exploit-btn');
             btns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+            if(btn) btn.classList.add('active');
 
             if(mode === 'LAPSE') {
                 document.getElementById('exploit-mode-text').innerText = "وضع LAPSE (حقن مباشر <= 11.50)";
-                document.getElementById('status-text').innerText = "تم إعداد وضع الحقن المباشر لثغرة LAPSE.";
             } else if(mode === 'POOPS') {
                 document.getElementById('exploit-mode-text').innerText = "وضع POOPS (حقن مباشر >= 11.52)";
-                document.getElementById('status-text').innerText = "تم إعداد وضع الحقن المباشر لثغرة POOPS.";
             } else {
                 document.getElementById('exploit-mode-text').innerText = "تفعيل GoldHEN مباشر بدون USB";
-                document.getElementById('status-text').innerText = "وضع التشغيل التلقائي المباشر عبر السكربت.";
             }
         }
 
         function triggerGoldhen() {
-            document.getElementById('status-text').innerText = "جاري تشغيل ثغرة الذاكرة وحقن GoldHEN (" + currentMode + ")... يرجى الانتظار";
-            document.getElementById('notification').innerText = "جاري المعالجة...";
+            document.getElementById('status-text').innerText = "جاري تشغيل الثغرة المخصصة لإصدار (" + detectedFW + ")...";
+            document.getElementById('notification').innerText = "جاري كسر النواة وحقن GoldHEN...";
 
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', 'goldhen.bin', true);
-            xhr.responseType = 'arraybuffer';
-            
-            xhr.onload = function(e) {
-                if (this.status == 200) {
-                    document.getElementById('status-text').innerText = "تم جلب الحمولة! جاري تنفيذ الحقن المباشر...";
-                    injectPayloadToMemory(this.response);
-                } else {
-                    document.getElementById('status-text').innerText = "خطأ: لم يتم العثور على ملف goldhen.bin في الهوست.";
-                }
-            };
-
-            xhr.onerror = function() {
-                document.getElementById('status-text').innerText = "تعذر تحميل ملف الـ Payload مباشرة.";
-            };
-
-            xhr.send();
-        }
-
-        function injectPayloadToMemory(payloadBuffer) {
-            setTimeout(function() {
-                document.getElementById('status-text').innerText = "GoldHEN Loaded Successfully! تم تفعيل الكسر بنجاح.";
-                document.getElementById('notification').innerText = "GoldHEN شغال الآن بدون الحاجة للفلاشة USB!";
-            }, 1500);
+            // تحميل ملف exploit.js ديناميكياً لتشغيل الكسر
+            let script = document.createElement('script');
+            script.src = 'exploit.js';
+            document.head.appendChild(script);
         }
 
         function loadPayload(name) {
             document.getElementById('status-text').innerText = "جاري تحميل أداة: " + name;
         }
 
-        if (window.applicationCache) {
-            window.applicationCache.addEventListener('cached', function() {
-                document.getElementById('status-text').innerText = "تم حفظ الهوست للكاش! جاهز للعمل أوفلاين بدون إنترنت.";
-            });
-            window.applicationCache.addEventListener('noupdate', function() {
-                document.getElementById('status-text').innerText = "الهوست مخزن ومحدث في كاش الجهاز.";
-            });
-        }
+        // تشغيل الفحص التلقائي فور تحميل الصفحة
+        window.onload = function() {
+            detectPS4Firmware();
+        };
     </script>
 </body>
 </html>
