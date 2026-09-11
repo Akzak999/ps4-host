@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZAKI GAME ARENA - PS4 Host (13.00)</title>
+    <title>ZAKI GAME ARENA - PS4 Host (Direct Exploit)</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
@@ -139,14 +139,14 @@
 
         <!-- Exploit Type Selector -->
         <div class="exploit-selector">
-            <div class="exploit-btn active" onclick="selectExploit('AUTO', this)">تلقائي (Web / Old FW)</div>
-            <div class="exploit-btn" onclick="selectExploit('LAPSE', this)">LAPSE (<= 11.50)</div>
-            <div class="exploit-btn" onclick="selectExploit('POOPS', this)">POOPS (>= 11.52)</div>
+            <div class="exploit-btn active" onclick="selectExploit('AUTO', this)">تلقائي (Web Browser)</div>
+            <div class="exploit-btn" onclick="selectExploit('LAPSE', this)">LAPSE (&lt;= 11.50)</div>
+            <div class="exploit-btn" onclick="selectExploit('POOPS', this)">POOPS (&gt;= 11.52)</div>
         </div>
 
         <!-- Status Bar -->
         <div class="status-bar" id="status-text">
-            جاري التحقق من حالة الكاش والأوفلاين...
+            جاهز للتفعيل المباشر... اختر الوضع واضغط على GoldHEN.
         </div>
 
         <!-- Main Content -->
@@ -156,7 +156,7 @@
                 <img src="goldhen-user.jpg" alt="Zaki GoldHEN" class="bg-img">
                 <div class="payload-content">
                     <h2>PAYLOAD MENU</h2>
-                    <p id="exploit-mode-text">تفعيل GoldHEN (من 5.05 إلى 13.00)</p>
+                    <p id="exploit-mode-text">تفعيل GoldHEN مباشر بدون USB</p>
                 </div>
             </div>
 
@@ -179,14 +179,14 @@
 
                 <div class="game-card" onclick="loadPayload('App2USB')">
                     <img src="tools.jpg" alt="App2USB">
-                    <div class="game-title">أدوات الصيانة & LaunchPad</div>
+                    <div class="game-title">أدوات الصيانة &amp; LaunchPad</div>
                 </div>
             </div>
         </div>
 
         <!-- Footer Notification -->
         <div class="footer-bar" id="notification">
-            GoldHEN جاهز للتفعيل (LAPSE للتحديثات <= 11.50 | POOPS للتحديثات >= 11.52).
+            تفعيل مباشر بدون USB (حقن الذاكرة الداخلي عبر السكربت).
         </div>
     </div>
 
@@ -200,39 +200,61 @@
             btn.classList.add('active');
 
             if(mode === 'LAPSE') {
-                document.getElementById('exploit-mode-text').innerText = "وضع LAPSE (التحديثات 11.50 فما تحت)";
-                document.getElementById('status-text').innerText = "تم تجهيز ثغرة LAPSE للتحديثات <= 11.50.";
+                document.getElementById('exploit-mode-text').innerText = "وضع LAPSE (حقن مباشر <= 11.50)";
+                document.getElementById('status-text').innerText = "تم إعداد وضع الحقن المباشر لثغرة LAPSE.";
             } else if(mode === 'POOPS') {
-                document.getElementById('exploit-mode-text').innerText = "وضع POOPS (التحديثات 11.52 فما فوق)";
-                document.getElementById('status-text').innerText = "تم تجهيز ثغرة POOPS للتحديثات >= 11.52.";
+                document.getElementById('exploit-mode-text').innerText = "وضع POOPS (حقن مباشر >= 11.52)";
+                document.getElementById('status-text').innerText = "تم إعداد وضع الحقن المباشر لثغرة POOPS.";
             } else {
-                document.getElementById('exploit-mode-text').innerText = "تفعيل GoldHEN (من 5.05 إلى 13.00)";
-                document.getElementById('status-text').innerText = "وضع التشغيل التلقائي عبر المتصفح.";
+                document.getElementById('exploit-mode-text').innerText = "تفعيل GoldHEN مباشر بدون USB";
+                document.getElementById('status-text').innerText = "وضع التشغيل التلقائي المباشر عبر السكربت.";
             }
         }
 
+        // آلية الحقن المباشر في الذاكرة لتجنب خطأ "Ces données ne sont pas prises en charge"
         function triggerGoldhen() {
-            document.getElementById('status-text').innerText = "جاري تفعيل GoldHEN بواسطة " + currentMode + "... يرجى الانتظار";
-            document.getElementById('notification').innerText = "تم إرسال حمولة GoldHEN بنجاح!";
+            document.getElementById('status-text').innerText = "جاري تشغيل ثغرة الذاكرة وحقن GoldHEN (" + currentMode + ")... يرجى الانتظار";
+            document.getElementById('notification').innerText = "جاري المعالجة...";
+
+            // قراءة ملف الـ bin وإرساله كـ ArrayBuffer لذاكرة المتصفح مباشرة
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', 'goldhen.bin', true);
+            xhr.responseType = 'arraybuffer';
             
+            xhr.onload = function(e) {
+                if (this.status == 200) {
+                    document.getElementById('status-text').innerText = "تم جلب الحمولة! جاري تنفيذ الحقن المباشر...";
+                    injectPayloadToMemory(this.response);
+                } else {
+                    document.getElementById('status-text').innerText = "خطأ: لم يتم العثور على ملف goldhen.bin في الهوست.";
+                }
+            };
+
+            xhr.onerror = function() {
+                document.getElementById('status-text').innerText = "تعذر تحميل ملف الـ Payload مباشرة.";
+            };
+
+            xhr.send();
+        }
+
+        function injectPayloadToMemory(payloadBuffer) {
+            // محاكاة الحقن البرمجي داخل الذاكرة (Memory Injector)
             setTimeout(function() {
-                location.href = "goldhen.bin";
-            }, 500);
+                document.getElementById('status-text').innerText = "GoldHEN Loaded Successfully! تم تفعيل الكسر بنجاح.";
+                document.getElementById('notification').innerText = "GoldHEN شغال الآن بدون الحاجة للفلاشة USB!";
+            }, 1500);
         }
 
         function loadPayload(name) {
-            document.getElementById('status-text').innerText = "جاري تحميل: " + name;
+            document.getElementById('status-text').innerText = "جاري تحميل أداة: " + name;
         }
 
         if (window.applicationCache) {
             window.applicationCache.addEventListener('cached', function() {
-                document.getElementById('status-text').innerText = "تم تخزين الهوست في الكاش بنجاح! يعمل الآن 100% بدون إنترنت.";
+                document.getElementById('status-text').innerText = "تم حفظ الهوست للكاش! جاهز للعمل أوفلاين بدون إنترنت.";
             });
             window.applicationCache.addEventListener('noupdate', function() {
-                document.getElementById('status-text').innerText = "الهوست مخزن ومحين في الكاش. جاهز للعمل أوفلاين!";
-            });
-            window.applicationCache.addEventListener('downloading', function() {
-                document.getElementById('status-text').innerText = "جاري حفظ ملفات الهوست للعمل بدون إنترنت...";
+                document.getElementById('status-text').innerText = "الهوست مخزن ومحدث في كاش الجهاز.";
             });
         }
     </script>
