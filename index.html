@@ -49,6 +49,7 @@
             margin-bottom: 25px;
             text-align: right;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
         }
 
         .main-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 20px; }
@@ -148,7 +149,7 @@
 
         <!-- Status Bar -->
         <div class="status-bar" id="status-text">
-            جاري فحص نظام جهاز الـ PS4 والتعرف على الإصدار...
+            جاري فحص الجهاز...
         </div>
 
         <!-- Main Content -->
@@ -158,7 +159,7 @@
                 <img src="goldhen-user.jpg" alt="Zaki GoldHEN" class="bg-img">
                 <div class="payload-content">
                     <h2>PAYLOAD MENU</h2>
-                    <p id="exploit-mode-text">تفعيل GoldHEN مباشر</p>
+                    <p>تفعيل GoldHEN مباشر</p>
                 </div>
             </button>
 
@@ -174,7 +175,7 @@
                     <div class="game-title">Spider-Man</div>
                 </button>
 
-                <button class="game-card" onclick="loadLoad('Uncharted 4')">
+                <button class="game-card" onclick="loadTool('Uncharted 4')">
                     <img src="uncharted.jpg" alt="Uncharted 4">
                     <div class="game-title">Uncharted 4</div>
                 </button>
@@ -193,27 +194,26 @@
     </div>
 
     <script>
-        let detectedFW = "";
-
-        // دالة التعرف التلقائي على إصدار الـ PS4 عند فتح الصفحة
-        function detectPS4Version() {
+        // دالة التعرف التلقائي على نوع الجهاز (PS4 أو PC)
+        function detectDeviceAndFW() {
             let ua = navigator.userAgent;
-            let match = ua.match(/PlayStation 4[^\)]*([0-9\.]+)/i);
+            let statusDiv = document.getElementById('status-text');
             
-            if (match && match[1]) {
-                detectedFW = match[1];
-                document.getElementById('status-text').innerText = "تم التعرف على الجهاز بنجاح! إصدار النظام: PS4 " + detectedFW;
-                document.getElementById('exploit-mode-text').innerText = "تفعيل GoldHEN (إصدار " + detectedFW + ")";
+            if (ua.includes("PlayStation 4") || ua.includes("PlayStation")) {
+                let match = ua.match(/PlayStation 4[^\)]*([0-9\.]+)/i);
+                let fwVersion = (match && match[1]) ? match[1] : "مجهول";
+                statusDiv.innerText = "🎮 متصل من جهاز: PlayStation 4 | الإصدار المكتشف: " + fwVersion;
+                statusDiv.style.borderColor = "#38bdf8";
             } else {
-                // في حال فتح المتصفح أو افتراض عمل النظام المباشر
-                detectedFW = "Auto";
-                document.getElementById('status-text').innerText = "متصفح PS4 جاهز. انقر على زر التفعيل للبدء.";
+                statusDiv.innerText = "💻 متصل من جهاز كمبيوتر (PC) للمعاينة والتعديل.";
+                statusDiv.style.borderColor = "#10b981";
             }
         }
 
-        // دالة تفعيل وجلب GoldHEN وحقنه مباشرة
+        // دالة تفعيل وحقن GoldHEN
         function triggerGoldhen() {
-            document.getElementById('status-text').innerText = "جاري تهيئة ثغرة الذاكرة وجلب GoldHEN...";
+            let statusDiv = document.getElementById('status-text');
+            statusDiv.innerText = "جاري جلب ملف goldhen.bin...";
             document.getElementById('notification').innerText = "يرجى الانتظار، جاري معالجة الحمولة...";
 
             var xhr = new XMLHttpRequest();
@@ -222,21 +222,20 @@
             
             xhr.onload = function() {
                 if (xhr.status === 200) {
-                    var payloadBuffer = new Uint8Array(xhr.response);
-                    document.getElementById('status-text').innerText = "تم جلب ملف goldhen.bin! جاري الحقن المباشر...";
+                    statusDiv.innerText = "تم العثور على ملف goldhen.bin! جاري تشغيل الثغرة والحقن...";
                     
-                    // استدعاء ملف الثغرة الخارجي لتنفيذ الحقن في الذاكرة
+                    // حقن ملف الـ Exploit الخارجي
                     let exploitScript = document.createElement('script');
                     exploitScript.src = 'exploit.js';
                     document.head.appendChild(exploitScript);
                     
                 } else {
-                    document.getElementById('status-text').innerText = "خطأ: لم يتم العثور على ملف goldhen.bin في المستودع.";
+                    statusDiv.innerText = "خطأ: لم يتم العثور على ملف goldhen.bin في المجلد الرئيسي.";
                 }
             };
             
             xhr.onerror = function() {
-                document.getElementById('status-text').innerText = "تعذر الاتصال بقراءة الحمولة.";
+                statusDiv.innerText = "تعذر الاتصال بملف الحمولة.";
             };
             
             xhr.send();
@@ -246,9 +245,9 @@
             document.getElementById('status-text').innerText = "تم اختيار الأداة: " + name;
         }
 
-        // تنفيذ الفحص التلقائي بمجرد التحميل
+        // تشغيل الفحص فور فتح الصفحة
         window.onload = function() {
-            detectPS4Version();
+            detectDeviceAndFW();
         };
     </script>
 </body>
