@@ -154,12 +154,12 @@
 
         <!-- Main Content -->
         <div class="main-grid">
-            <!-- Left Side: GoldHEN Button -->
-            <button class="payload-card" onclick="triggerGoldhen()">
+            <!-- Left Side: GoldHEN / Poops Exploit Button (مربوط مباشرة بملف الثغرة الحقيقي) -->
+            <button class="payload-card" onclick="triggerPoopsExploit()">
                 <img src="goldhen-user.jpg" alt="Zaki GoldHEN" class="bg-img">
                 <div class="payload-content">
                     <h2>PAYLOAD MENU</h2>
-                    <p>تفعيل GoldHEN مباشر</p>
+                    <p>تفعيل GoldHEN (Poops)</p>
                 </div>
             </button>
 
@@ -194,7 +194,7 @@
     </div>
 
     <script>
-        // دالة التعرف التلقائي على نوع الجهاز (PS4 أو PC)
+        // دالة التعرف التلقائي على نوع الجهاز وإصدار النظام
         function detectDeviceAndFW() {
             let ua = navigator.userAgent;
             let statusDiv = document.getElementById('status-text');
@@ -210,42 +210,23 @@
             }
         }
 
-        // دالة تفعيل وحقن GoldHEN
-        function triggerGoldhen() {
+        // دالة تشغيل الثغرة والانتقال لملف التنفيذ الحقيقي
+        function triggerPoopsExploit() {
             let statusDiv = document.getElementById('status-text');
-            statusDiv.innerText = "جاري جلب ملف goldhen.bin...";
-            document.getElementById('notification').innerText = "يرجى الانتظار، جاري معالجة الحمولة...";
-
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', 'goldhen.bin', true);
-            xhr.responseType = 'arraybuffer';
+            statusDiv.innerText = "جاري تحميل ثغرة Poops وتجهيز النواة...";
+            document.getElementById('notification').innerText = "يرجى الانتظار، يتم الآن تنفيذ الاستغلال...";
             
-            xhr.onload = function() {
-                if (xhr.status === 200) {
-                    statusDiv.innerText = "تم العثور على ملف goldhen.bin! جاري تشغيل الثغرة والحقن...";
-                    
-                    // حقن ملف الـ Exploit الخارجي
-                    let exploitScript = document.createElement('script');
-                    exploitScript.src = 'exploit.js';
-                    document.head.appendChild(exploitScript);
-                    
-                } else {
-                    statusDiv.innerText = "خطأ: لم يتم العثور على ملف goldhen.bin في المجلد الرئيسي.";
-                }
-            };
-            
-            xhr.onerror = function() {
-                statusDiv.innerText = "تعذر الاتصال بملف الحمولة.";
-            };
-            
-            xhr.send();
+            // التوجيه الفوري نحو ملف الثغرة الفعلي الذي نقلناه للمستودع
+            setTimeout(function() {
+                window.location.href = 'run_poops.html';
+            }, 800);
         }
 
         function loadTool(name) {
             document.getElementById('status-text').innerText = "تم اختيار الأداة: " + name;
         }
 
-        // تشغيل الفحص فور فتح الصفحة
+        // تشغيل فحص الجهاز فور فتح الصفحة
         window.onload = function() {
             detectDeviceAndFW();
         };
