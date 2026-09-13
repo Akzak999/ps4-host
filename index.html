@@ -13,30 +13,40 @@
   }
   body::before {
     content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(11, 13, 16, 0.88); z-index: -1;
+    background: rgba(11, 13, 16, 0.85); z-index: -1;
   }
   #brand { 
-    text-align: center; padding: 14px 10px; background: rgba(14, 17, 22, 0.95);
+    text-align: center; padding: 12px 10px; background: rgba(14, 17, 22, 0.95);
     border-bottom: 2px solid #1e2732;
   }
-  #brand b { font-size: 18px; font-weight: 700; letter-spacing: .14em; color: #e6ebf2; }
+  #brand b { font-size: 17px; font-weight: 700; letter-spacing: .1em; color: #e6ebf2; }
   
-  #wrap { padding: 25px 30px; max-width: 800px; margin: 40px auto; background: rgba(17, 21, 27, 0.9); border: 1px solid #1e2732; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center; }
+  .container { max-width: 900px; margin: 20px auto; padding: 0 15px; }
   
-  #profile-container { margin-bottom: 20px; }
-  #profile-container img { width: 110px; height: 110px; border-radius: 50%; border: 3px solid #7fd0a0; box-shadow: 0 0 15px rgba(127, 208, 160, 0.4); object-fit: cover; }
+  /* شريط المعلومات العلوي */
+  .info-box {
+    background: rgba(17, 21, 27, 0.9); border: 1px solid #1e2732; border-radius: 10px;
+    padding: 15px 20px; margin-bottom: 20px; display: flex; align-items: center; gap: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+  }
+  .info-box img { width: 80px; height: 80px; border-radius: 50%; border: 3px solid #7fd0a0; object-fit: cover; }
+  .info-text h2 { margin: 0 0 5px; font-size: 20px; color: #fff; }
+  .info-text p { margin: 3px 0; font-size: 14px; color: #8b95a3; }
+  .info-text p b { color: #c8ced8; }
 
-  #state { font-size: 22px; font-weight: 700; margin: 0 0 10px; color: #fff; }
-  #det { font-size: 14px; color: #8b95a3; margin: 0 0 10px; }
-  #det b { color: #c8ced8; font-weight: 600; }
-  
-  #cache { font-size: 13px; color: #d8c07f; margin: 10px 0; padding: 8px; background: rgba(0,0,0,0.3); border-radius: 6px; }
-  #cache.cacheok { color: #7fd0a0; background: rgba(127, 208, 160, 0.1); }
+  /* شبكة الألعاب والأزرار القديمة */
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 20px; }
+  .card {
+    background: rgba(17, 21, 27, 0.85); border: 1px solid #1e2732; border-radius: 8px;
+    overflow: hidden; text-align: center; transition: 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  }
+  .card:hover { border-color: #7fd0a0; transform: translateY(-3px); }
+  .card img { width: 100%; height: 110px; object-fit: cover; border-bottom: 1px solid #1e2732; }
+  .card .title { padding: 10px; font-weight: 600; font-size: 14px; color: #e6ebf2; }
 
-  #out { white-space: pre-wrap; font: 12px/1.45 Consolas, monospace;
-         background: #11151b; border: 1px solid #1e2732; border-radius: 5px;
-         padding: 10px 12px; height: 180px; overflow-y: auto; text-align: left; direction: ltr; margin-top: 15px; }
-  
+  #cache-status { font-size: 13px; color: #d8c07f; background: rgba(0,0,0,0.4); padding: 10px; border-radius: 6px; text-align: center; margin-bottom: 15px; }
+  #cache-status.cacheok { color: #7fd0a0; background: rgba(127, 208, 160, 0.1); }
+
   .ok { color: #7fd0a0; } .bad { color: #d08a7f; } .warn { color: #d8c07f; }
 </style>
 </head>
@@ -46,22 +56,44 @@
     <b>ZAKI GAME ARENA | PLAYSTATION HOST</b>
 </div>
 
-<div id="wrap">
-  <div id="profile-container">
+<div class="container">
+  <!-- شريط المعلومات وصورتك -->
+  <div class="info-box">
       <img src="profile.jpg" alt="Zaki">
+      <div class="info-text">
+          <h2 id="state">جاري فحص الإصدار...</h2>
+          <p id="det"></p>
+      </div>
   </div>
-  
-  <div id="state">جاري فحص الإصدار...</div>
-  <div id="det"></div>
-  <div id="cache">جاري التحقق من التخزين المؤقت...</div>
-  <div id="out"></div>
+
+  <div id="cache-status">جاري التحقق من التخزين المؤقت...</div>
+
+  <!-- الأزرار والصور القديمة -->
+  <div class="grid">
+      <div class="card">
+          <img src="gow.jpg" alt="God of War">
+          <div class="title">God of War</div>
+      </div>
+      <div class="card">
+          <img src="spiderman.jpg" alt="Spider-Man">
+          <div class="title">Spider-Man</div>
+      </div>
+      <div class="card">
+          <img src="uncharted.jpg" alt="Uncharted">
+          <div class="title">Uncharted 4</div>
+      </div>
+      <div class="card">
+          <img src="tools.jpg" alt="Tools">
+          <div class="title">GoldHEN & Tools</div>
+      </div>
+  </div>
 </div>
 
 <script>
 (function () {
     var stateEl = document.getElementById("state");
     var detEl = document.getElementById("det");
-    var cacheEl = document.getElementById("cache");
+    var cacheEl = document.getElementById("cache-status");
     function setState(t, c) { stateEl.textContent = t; stateEl.className = c || ""; }
     function setCache(t, ok) { cacheEl.textContent = t; cacheEl.className = ok ? "cacheok" : ""; }
     var params = new URLSearchParams(location.search);
@@ -86,30 +118,18 @@
     } else if (fwnum >= 1250) {
         bug = "poops"; why = key + " >= 12.50";
     } else {
-        why = key + " -- no working bug (lapse ends at 12.02, poops needs 12.50)";
+        why = key + " -- no working bug";
     }
     detEl.innerHTML = "الإصدار المكتشف: <b>" + (key || "غير معروف") + "</b> &middot; الثغرة: <b>" + (bug || "لا توجد") + "</b>";
 
     if (!bug) { setState("إصدار غير مدعوم", "bad"); return; }
 
     function runExploit() {
-        setState("جاري حقن وتشغيل ثغرة " + bug + "...", "warn");
-        // هنا يتم استدعاء ملف الثغرة مباشرة في نفس الصفحة دون مغادرتها
+        setState("جاري تشغيل ثغرة " + bug + "...", "warn");
         var s = document.createElement("script");
         s.type = "module";
         s.src = (bug === "lapse" ? "chain_lapse.js" : "chain_poops.js");
         document.body.appendChild(s);
-    }
-
-    function waitForTap(msg, action) {
-        setState(msg, "warn");
-        function fire() {
-            window.removeEventListener("click", fire);
-            window.removeEventListener("keydown", fire);
-            action();
-        }
-        window.addEventListener("click", fire);
-        window.addEventListener("keydown", fire);
     }
 
     var ac = window.applicationCache;
@@ -121,42 +141,19 @@
     } else if (ac.status === ac.IDLE) {
         setCache("تم التخزين المؤقت بنجاح (Cached)", true);
         runExploit();
-    } else if (ac.status === ac.UPDATEREADY) {
-        try { ac.swapCache(); } catch (e) {}
-        setCache("التحديث جاهز", true);
-        waitForTap("التحديث جاهز -- اضغط X أو انقر لإعادة التحميل والتفعيل",
-                   function () { location.reload(); });
     } else {
-        setCache("جاري فحص الكاش...");
-        ac.addEventListener("downloading",
-            function () { setCache("جاري التخزين المؤقت للاستخدام بدون إنترنت..."); }, false);
-        ac.addEventListener("progress", function (e) {
-            if (e && e.total)
-                setCache("جاري التحميل " + Math.round((e.loaded / e.total) * 100) + "%");
-        }, false);
-
+        setCache("جاري فحص الكاش والتخزين...");
         ac.addEventListener("cached", function () {
-            setCache("تم التخزين المؤقت بنجاح للاستخدام بدون إنترنت", true);
-            waitForTap("تم التخزين بنجاح -- اضغط X أو انقر للبدء", runExploit);
+            setCache("تم التخزين بنجاح للاستخدام بدون إنترنت", true);
+            runExploit();
         }, false);
-        ac.addEventListener("updateready", function () {
-            try { ac.swapCache(); } catch (e) {}
-            setCache("التحديث جاهز", true);
-            waitForTap("التحديث جاهز -- اضغط X أو انقر لإعادة التحميل",
-                        function () { location.reload(); });
-        }, false);
-
         ac.addEventListener("noupdate", function () {
             setCache("الكاش مخزن -- جاهز بدون إنترنت", true);
             runExploit();
         }, false);
         ac.addEventListener("error", function () {
-            setCache("تعذر الاتصال بالكاش");
-            waitForTap("فشل الكاش -- اضغط X أو انقر للتشغيل على أي حال", runExploit);
-        }, false);
-        ac.addEventListener("obsolete", function () {
-            setCache("الكاش أصبح قديمًا");
-            waitForTap("الكاش قديم -- اضغط X أو انقر للتشغيل", runExploit);
+            setCache("تعذر الاتصال بالكاش - جاري التشغيل...");
+            runExploit();
         }, false);
     }
 })();
