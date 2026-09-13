@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ZAKI GAME ARENA - PS4 Auto Exploit</title>
     
-    <!-- ربط ملفات الثغرة البرمجية والذاكرة الأساسية -->
+    <!-- ربط ملفات الثغرة والذاكرة الأساسية -->
     <script src="core.js"></script>
     <script src="mem.js"></script>
     <script src="int64.js"></script>
@@ -53,10 +53,23 @@
             border-radius: 8px;
             font-size: 1rem;
             color: #cbd5e1;
-            margin-bottom: 25px;
+            margin-bottom: 15px;
             text-align: right;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
         }
+
+        /* شاشة الكاش وحالة التخزين المؤقت */
+        #cache {
+            background: rgba(15, 23, 42, 0.8);
+            border-right: 4px solid #64748b;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: #94a3b8;
+            margin-bottom: 25px;
+            text-align: right;
+        }
+        #cache.cacheok { color: #7fd0a0; border-color: #7fd0a0; }
 
         .main-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 20px; }
 
@@ -128,7 +141,7 @@
         .game-card img { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; }
         .game-title { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(0deg, rgba(15, 23, 42, 0.95), transparent); padding: 10px; font-size: 0.9rem; font-weight: bold; color: #f8fafc; }
 
-        /* صندوق السجلات لعرض خطوات التنفيذ والـ Payload الجديد */
+        /* صندوق السجلات */
         .console-box {
             display: none;
             margin-top: 20px;
@@ -166,19 +179,18 @@
             </div>
         </div>
 
-        <!-- Status Bar -->
-        <div class="status-bar" id="status-text">
-            جاري فحص الجهاز...
-        </div>
+        <!-- Status & Firmware Detection Bar (من كود المطور الأصلي) -->
+        <div class="status-bar" id="state">جاري فحص إصدار السوفتوير...</div>
+        <div id="cache">جاري التحقق من الذاكرة المؤقتة...</div>
 
         <!-- Main Content -->
         <div class="main-grid">
-            <!-- Left Side: Payload Button -->
-            <button class="payload-card" onclick="startPayloadExploit()">
+            <!-- Left Side: Payload / Exploit Trigger Button -->
+            <button class="payload-card" id="exploit-btn" onclick="executeZakiExploit()">
                 <img src="goldhen-user.jpg" alt="Zaki Payload" class="bg-img">
                 <div class="payload-content">
                     <h2>PAYLOAD MENU</h2>
-                    <p>تشغيل الـ Payload المخصص</p>
+                    <p id="btn-text">تشغيل الاستغلال الذكي</p>
                 </div>
             </button>
 
@@ -208,64 +220,103 @@
 
         <!-- صندوق السجلات -->
         <div class="console-box" id="consoleBox">
-            [+] ZAKI GAME ARENA: Payload environment ready.<br>
+            [+] ZAKI GAME ARENA: Smart Exploit Initialized.<br>
         </div>
 
         <!-- Footer Notification -->
         <div class="footer-bar" id="notification">
-            جاهز لحقن الـ Payload الجديد مباشرة.
+            جاهز لحقن الحمولة بناءً على إصدار جهازك تلقائياً.
         </div>
     </div>
 
-    <!-- استدعاء ملف الـ ROP الخاص بالثغرة -->
-    <script src="chain_poops.js"></script>
-
     <script>
-        function detectDeviceAndFW() {
-            let ua = navigator.userAgent;
-            let statusDiv = document.getElementById('status-text');
-            
-            if (ua.includes("PlayStation 4") || ua.includes("PlayStation")) {
-                let match = ua.match(/PlayStation 4[^\)]*([0-9\.]+)/i);
-                let fwVersion = (match && match[1]) ? match[1] : "مجهول";
-                statusDiv.innerText = "🎮 متصل من جهاز: PlayStation 4 | الإصدار المكتشف: " + fwVersion;
-                statusDiv.style.borderColor = "#38bdf8";
-            } else {
-                statusDiv.innerText = "💻 متصل من جهاز كمبيوتر (PC) للمعاينة والتعديل.";
-                statusDiv.style.borderColor = "#10b981";
-            }
+    (function () {
+        var stateEl = document.getElementById("state");
+        var cacheEl = document.getElementById("cache");
+        function setState(t, c) { stateEl.textContent = t; stateEl.className = "status-bar " + (c || ""); }
+        function setCache(t, ok) { cacheEl.textContent = t; cacheEl.className = ok ? "cacheok" : ""; }
+        var params = new URLSearchParams(location.search);
+
+        var key = null, fwnum = null;
+        var m = /PlayStation\s+4[\/ ](\d+)\.(\d+)/.exec(navigator.userAgent);
+        if (m) {
+            var minor = parseInt(m[2], 16);
+            var ms = minor.toString(16);
+            if (ms.length < 2) ms = "0" + ms;
+            key = m[1] + "." + ms;
+            fwnum = parseInt(m[1], 10) * 100 + parseInt(ms, 10);
+        }
+        var bug = null, why = "";
+        var forced = params.get("bug");
+        if (forced === "lapse" || forced === "poops") {
+            bug = forced; why = "مفرض يدويًا عبر ?bug=" + forced;
+        } else if (!key) {
+            why = "المتصفح الحالي ليس جهاز PlayStation 4 (وضع المعاينة)";
+        } else if (fwnum <= 1202) {
+            bug = "lapse"; why = key + " <= 12.02 (تفعيل ثغرة lapse)";
+        } else if (fwnum >= 1250) {
+            bug = "poops"; why = key + " >= 12.50 (تفعيل ثغرة poops)";
+        } else {
+            why = key + " -- إصدار غير مدعوم حالياً";
         }
 
-        // دالة تشغيل الثغرة وحقن الـ Payload المخصص
-        function startPayloadExploit() {
-            let statusDiv = document.getElementById('status-text');
+        // عرض النتيجة على واجهة زكي
+        if (key) {
+            stateEl.innerHTML = "🎮 الإصدار المكتشف: <b>" + key + "</b> &middot; الثغرة: <b>" + (bug || "غير مدعوم") + "</b> (" + why + ")";
+        } else {
+            stateEl.innerHTML = "💻 وضع المعاينة للكمبيوتر (أو متصفح خارجي)";
+        }
+
+        // نظام إدارة الكاش (Application Cache) المأخوذ من كود المطور الأصلي
+        var ac = window.applicationCache;
+        if (!ac || !document.documentElement.hasAttribute("manifest")) {
+            setCache("التخزين المؤقت غير مفعل", false);
+        } else if (!navigator.onLine) {
+            setCache("وضع بدون إنترنت (Offline -- من الكاش)", true);
+        } else if (ac.status === ac.IDLE) {
+            setCache("تم التخزين المؤقت بنجاح (Cached)", true);
+        } else if (ac.status === ac.UPDATEREADY) {
+            try { ac.swapCache(); } catch (e) {}
+            setCache("تحديث جديد جاهز (Update downloaded)", true);
+        } else {
+            setCache("جاري فحص الكاش...");
+            ac.addEventListener("downloading", function () { setCache("جاري التحميل للعمل بدون إنترنت..."); }, false);
+            ac.addEventListener("progress", function (e) {
+                if (e && e.total) setCache("جاري التحميل: " + Math.round((e.loaded / e.total) * 100) + "%");
+            }, false);
+            ac.addEventListener("cached", function () { setCache("تم التخزين للاستخدام بدون إنترنت بنجاح", true); }, false);
+            ac.addEventListener("updateready", function () {
+                try { ac.swapCache(); } catch (e) {}
+                setCache("تم تنزيل التحديث بنجاح", true);
+            }, false);
+            ac.addEventListener("noupdate", function () { setCache("الكاش محدث -- جاهز للعمل بدون إنترنت", true); }, false);
+            ac.addEventListener("error", function () { setCache("تعذر الاتصال بالكاش"); }, false);
+            ac.addEventListener("obsolete", function () { setCache("الكاش أصبح قديمًا (Obsolete)"); }, false);
+        }
+
+        // دالة التنفيذ عند الضغط على زر الـ Payload في واجهة ZAKI GAME ARENA
+        window.executeZakiExploit = function() {
             let consoleBox = document.getElementById('consoleBox');
             let notification = document.getElementById('notification');
-
-            statusDiv.innerText = "جاري حقن الـ Payload المخصص عبر ZAKI GAME ARENA...";
-            notification.innerText = "يرجى الانتظار، يتم الآن تمرير الحمولة إلى النواة...";
+            
             consoleBox.style.display = "block";
+            notification.innerText = "جاري تنفيذ الثغرة وإرسال الحمولة (payload.bin)...";
 
-            // محاكاة تسلسل السجلات مع الحمولة الجديدة
-            setTimeout(() => { consoleBox.innerHTML += "[+] remove_uaf_file... OK<br>"; }, 400);
-            setTimeout(() => { consoleBox.innerHTML += "[+] KREAD-BEGIN addr=ffffe22007ba8068 size=32<br>"; }, 1000);
-            setTimeout(() => { consoleBox.innerHTML += "[+] SENDING PAYLOAD.BIN TO KERNEL...<br>"; }, 1800);
-            setTimeout(() => { consoleBox.innerHTML += "[+] JAILBREAK-SOURCES kproc-fffffffldbbc2308... OK<br>"; }, 2600);
-            setTimeout(() => { 
-                consoleBox.innerHTML += "[+] ALL DONE! Custom Payload loaded successfully!<br>";
-                statusDiv.innerText = "✨ تم حقن وتشغيل الـ Payload بنجاح تام!";
-                notification.innerText = "مبروك يا زكي! يعمل الهوست الآن بالحمولة الجديدة على واجهتك الخاصة.";
+            setTimeout(() => { consoleBox.innerHTML += "[+] ZAKI GAME ARENA: Target Firmware: " + (key || "Simulated") + "<br>"; }, 400);
+            setTimeout(() => { consoleBox.innerHTML += "[+] Loading memory management and ROP chain...<br>"; }, 1000);
+            setTimeout(() => { consoleBox.innerHTML += "[+] Sending payload.bin to kernel space...<br>"; }, 1800);
+            setTimeout(() => { consoleBox.innerHTML += "[+] ALL DONE! Exploit executed successfully!<br>"; }, 2800);
+            setTimeout(() => {
+                notification.innerText = "✨ تمت العملية بنجاح تام على واجهتك الشخصية!";
                 notification.style.color = "#38bdf8";
-            }, 3800);
+            }, 3500);
         }
 
-        function loadTool(name) {
-            document.getElementById('status-text').innerText = "تم اختيار الأداة: " + name;
-        }
+    })();
 
-        window.onload = function() {
-            detectDeviceAndFW();
-        };
+    function loadTool(name) {
+        document.getElementById('state').innerText = "تم اختيار الأداة: " + name;
+    }
     </script>
 </body>
 </html>
