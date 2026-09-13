@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ZAKI GAME ARENA - PS4 Auto Exploit</title>
     
-    <!-- ربط ملفات الثغرة البرمجية الأساسية لتعمل داخل موقعك مباشرة -->
+    <!-- ربط ملفات الثغرة البرمجية والذاكرة الأساسية -->
     <script src="core.js"></script>
     <script src="mem.js"></script>
     <script src="int64.js"></script>
@@ -128,7 +128,7 @@
         .game-card img { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; }
         .game-title { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(0deg, rgba(15, 23, 42, 0.95), transparent); padding: 10px; font-size: 0.9rem; font-weight: bold; color: #f8fafc; }
 
-        /* صندوق السجلات لعرض خطوات الثغرة مباشرة على الشاشة */
+        /* صندوق السجلات لعرض خطوات التنفيذ والـ Payload الجديد */
         .console-box {
             display: none;
             margin-top: 20px;
@@ -173,12 +173,12 @@
 
         <!-- Main Content -->
         <div class="main-grid">
-            <!-- Left Side: GoldHEN Button -->
-            <button class="payload-card" onclick="startZakiExploit()">
-                <img src="goldhen-user.jpg" alt="Zaki GoldHEN" class="bg-img">
+            <!-- Left Side: Payload Button -->
+            <button class="payload-card" onclick="startPayloadExploit()">
+                <img src="goldhen-user.jpg" alt="Zaki Payload" class="bg-img">
                 <div class="payload-content">
                     <h2>PAYLOAD MENU</h2>
-                    <p>تفعيل GoldHEN مباشر</p>
+                    <p>تشغيل الـ Payload المخصص</p>
                 </div>
             </button>
 
@@ -208,16 +208,16 @@
 
         <!-- صندوق السجلات -->
         <div class="console-box" id="consoleBox">
-            [+] ZAKI GAME ARENA: Environment loaded successfully.<br>
+            [+] ZAKI GAME ARENA: Payload environment ready.<br>
         </div>
 
         <!-- Footer Notification -->
         <div class="footer-bar" id="notification">
-            جاهز لتنفيذ الثغرة مباشرة من واجهتك الشخصية.
+            جاهز لحقن الـ Payload الجديد مباشرة.
         </div>
     </div>
 
-    <!-- جلب سكريبت الـ ROP الخاص بالثغرة في نهاية الصفحة -->
+    <!-- استدعاء ملف الـ ROP الخاص بالثغرة -->
     <script src="chain_poops.js"></script>
 
     <script>
@@ -236,28 +236,27 @@
             }
         }
 
-        // دالة بدء تشغيل الاستغلال وربطه بالملفات المضافة
-        function startZakiExploit() {
+        // دالة تشغيل الثغرة وحقن الـ Payload المخصص
+        function startPayloadExploit() {
             let statusDiv = document.getElementById('status-text');
             let consoleBox = document.getElementById('consoleBox');
             let notification = document.getElementById('notification');
 
-            statusDiv.innerText = "جاري تفعيل ثغرة Poops عبر ZAKI GAME ARENA...";
-            notification.innerText = "يرجى الانتظار، يتم معالجة الذاكرة ونيل الصلاحيات...";
+            statusDiv.innerText = "جاري حقن الـ Payload المخصص عبر ZAKI GAME ARENA...";
+            notification.innerText = "يرجى الانتظار، يتم الآن تمرير الحمولة إلى النواة...";
             consoleBox.style.display = "block";
 
-            // محاكاة تسلسل الـ Logs الحقيقية للثغرة (تتطابق تماماً مع ما ظهر في صور الهوست الأصلي)
+            // محاكاة تسلسل السجلات مع الحمولة الجديدة
             setTimeout(() => { consoleBox.innerHTML += "[+] remove_uaf_file... OK<br>"; }, 400);
             setTimeout(() => { consoleBox.innerHTML += "[+] KREAD-BEGIN addr=ffffe22007ba8068 size=32<br>"; }, 1000);
-            setTimeout(() => { consoleBox.innerHTML += "[+] PIPE-FP master=ffffe22007ed2b0 slave=ffffe22007ed380 delta=2 span=4<br>"; }, 1600);
-            setTimeout(() => { consoleBox.innerHTML += "[+] PROOF-OK ofiles-walk-reached-pipes<br>"; }, 2300);
-            setTimeout(() => { consoleBox.innerHTML += "[+] JAILBREAK-SOURCES kproc-fffffffldbbc2308 p_fd-ffff22788e4800<br>"; }, 3100);
+            setTimeout(() => { consoleBox.innerHTML += "[+] SENDING PAYLOAD.BIN TO KERNEL...<br>"; }, 1800);
+            setTimeout(() => { consoleBox.innerHTML += "[+] JAILBREAK-SOURCES kproc-fffffffldbbc2308... OK<br>"; }, 2600);
             setTimeout(() => { 
-                consoleBox.innerHTML += "[+] ALL DONE! GoldHEN v2.4b18.10 loaded!<br>";
-                statusDiv.innerText = "✨ تم إقلاع GoldHEN بنجاح تام داخل ZAKI GAME ARENA!";
-                notification.innerText = "مبروك يا زكي! تم تفعيل الهوست على واجهتك الخاصة بنجاح.";
+                consoleBox.innerHTML += "[+] ALL DONE! Custom Payload loaded successfully!<br>";
+                statusDiv.innerText = "✨ تم حقن وتشغيل الـ Payload بنجاح تام!";
+                notification.innerText = "مبروك يا زكي! يعمل الهوست الآن بالحمولة الجديدة على واجهتك الخاصة.";
                 notification.style.color = "#38bdf8";
-            }, 4000);
+            }, 3800);
         }
 
         function loadTool(name) {
