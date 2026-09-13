@@ -26,12 +26,16 @@
   #profile-container { margin-bottom: 20px; }
   #profile-container img { width: 110px; height: 110px; border-radius: 50%; border: 3px solid #7fd0a0; box-shadow: 0 0 15px rgba(127, 208, 160, 0.4); object-fit: cover; }
 
-  #state { font-size: 24px; font-weight: 700; margin: 0 0 12px; color: #fff; }
-  #det { font-size: 15px; color: #8b95a3; margin: 0 0 15px; }
+  #state { font-size: 22px; font-weight: 700; margin: 0 0 10px; color: #fff; }
+  #det { font-size: 14px; color: #8b95a3; margin: 0 0 10px; }
   #det b { color: #c8ced8; font-weight: 600; }
   
-  #cache { font-size: 14px; color: #d8c07f; margin: 15px 0; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 6px; }
+  #cache { font-size: 13px; color: #d8c07f; margin: 10px 0; padding: 8px; background: rgba(0,0,0,0.3); border-radius: 6px; }
   #cache.cacheok { color: #7fd0a0; background: rgba(127, 208, 160, 0.1); }
+
+  #out { white-space: pre-wrap; font: 12px/1.45 Consolas, monospace;
+         background: #11151b; border: 1px solid #1e2732; border-radius: 5px;
+         padding: 10px 12px; height: 180px; overflow-y: auto; text-align: left; direction: ltr; margin-top: 15px; }
   
   .ok { color: #7fd0a0; } .bad { color: #d08a7f; } .warn { color: #d8c07f; }
 </style>
@@ -50,6 +54,7 @@
   <div id="state">جاري فحص الإصدار...</div>
   <div id="det"></div>
   <div id="cache">جاري التحقق من التخزين المؤقت...</div>
+  <div id="out"></div>
 </div>
 
 <script>
@@ -87,10 +92,14 @@
 
     if (!bug) { setState("إصدار غير مدعوم", "bad"); return; }
 
-    var target = (bug === "lapse" ? "run_lapse.html" : "run_poops.html")
-        + location.search;
-    function go() { setState("جاري تحميل ثغرة " + bug + "...", "warn");
-                    location.replace(target); }
+    function runExploit() {
+        setState("جاري حقن وتشغيل ثغرة " + bug + "...", "warn");
+        // هنا يتم استدعاء ملف الثغرة مباشرة في نفس الصفحة دون مغادرتها
+        var s = document.createElement("script");
+        s.type = "module";
+        s.src = (bug === "lapse" ? "chain_lapse.js" : "chain_poops.js");
+        document.body.appendChild(s);
+    }
 
     function waitForTap(msg, action) {
         setState(msg, "warn");
@@ -105,13 +114,13 @@
 
     var ac = window.applicationCache;
     if (!ac || !document.documentElement.hasAttribute("manifest")) {
-        go();
+        runExploit();
     } else if (!navigator.onLine) {
         setCache("وضع عدم الاتصال -- يتم التشغيل من الكاش", true);
-        go();
+        runExploit();
     } else if (ac.status === ac.IDLE) {
         setCache("تم التخزين المؤقت بنجاح (Cached)", true);
-        go();
+        runExploit();
     } else if (ac.status === ac.UPDATEREADY) {
         try { ac.swapCache(); } catch (e) {}
         setCache("التحديث جاهز", true);
@@ -120,7 +129,7 @@
     } else {
         setCache("جاري فحص الكاش...");
         ac.addEventListener("downloading",
-            function () { setCache("جاري التخزين المؤقت للاستخدام بدون إنترنت (الزيارة الأولى)..."); }, false);
+            function () { setCache("جاري التخزين المؤقت للاستخدام بدون إنترنت..."); }, false);
         ac.addEventListener("progress", function (e) {
             if (e && e.total)
                 setCache("جاري التحميل " + Math.round((e.loaded / e.total) * 100) + "%");
@@ -128,26 +137,26 @@
 
         ac.addEventListener("cached", function () {
             setCache("تم التخزين المؤقت بنجاح للاستخدام بدون إنترنت", true);
-            waitForTap("تم التخزين بنجاح -- اضغط X أو انقر للتشغيل", go);
+            waitForTap("تم التخزين بنجاح -- اضغط X أو انقر للبدء", runExploit);
         }, false);
         ac.addEventListener("updateready", function () {
             try { ac.swapCache(); } catch (e) {}
             setCache("التحديث جاهز", true);
-            waitForTap("التحديث جاهز -- اضغط X أو انقر لإعادة التحميل والتفعيل",
+            waitForTap("التحديث جاهز -- اضغط X أو انقر لإعادة التحميل",
                         function () { location.reload(); });
         }, false);
 
         ac.addEventListener("noupdate", function () {
             setCache("الكاش مخزن -- جاهز بدون إنترنت", true);
-            go();
+            runExploit();
         }, false);
         ac.addEventListener("error", function () {
             setCache("تعذر الاتصال بالكاش");
-            waitForTap("فشل الكاش -- اضغط X أو انقر للتشغيل على أي حال", go);
+            waitForTap("فشل الكاش -- اضغط X أو انقر للتشغيل على أي حال", runExploit);
         }, false);
         ac.addEventListener("obsolete", function () {
             setCache("الكاش أصبح قديمًا");
-            waitForTap("الكاش قديم -- اضغط X أو انقر للتشغيل", go);
+            waitForTap("الكاش قديم -- اضغط X أو انقر للتشغيل", runExploit);
         }, false);
     }
 })();
