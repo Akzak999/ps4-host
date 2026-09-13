@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# v1.0
+# v2.0 - Zaki Game Arena
 
 index.html
 bg.jpg
@@ -9,7 +9,27 @@ gow.jpg
 spiderman.jpg
 uncharted.jpg
 tools.jpg
+core.js
+mem.js
+int64.js
+ps4_offsets.js
+exploit.js
+chain_lapse.js
+chain_poops.js
+rpc_worker.js
+run_lapse.html
+run_poops.html
 payload.bin
+patches/1100.bin
+patches/1150.bin
+patches/1200.bin
+patches/1250.bin
+patches/1300.bin
 
 NETWORK:
 *
+
+FALLBACK:
+index.html index.html
+run_lapse.html run_lapse.html
+run_poops.html run_poops.html
