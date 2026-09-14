@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# build @zaki-arena
+# build @zaki-arena-v2
 
 index.html
 run_lapse.html
@@ -11,6 +11,7 @@ mem.js
 int64.js
 ps4_offsets.js
 rpc_worker.js
+logo_raw.png
 payload.bin
 profile.jpg
 spiderman.jpg
