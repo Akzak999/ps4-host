@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# build @zaki-arena-v2
+# build zaki-arena-v3
 
 index.html
 run_lapse.html
@@ -13,10 +13,6 @@ ps4_offsets.js
 rpc_worker.js
 logo_raw.png
 payload.bin
-profile.jpg
-spiderman.jpg
-uncharted.jpg
-tools.jpg
 patches/1100.bin
 patches/1150.bin
 patches/1200.bin
