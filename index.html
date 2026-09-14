@@ -1,33 +1,108 @@
 <!DOCTYPE html>
-<html lang="en" manifest="cache.appcache">
+<html lang="ar" dir="rtl" manifest="cache.appcache">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ps4 jailbreak</title>
+<title>ZAKI GAME ARENA | PS4 HOST</title>
 <style>
-  html, body { margin:0; padding:0; background:#0b0d10; color:#c8ced8;
-               font:15px/1.45 "Segoe UI", system-ui, sans-serif; }
-  #wrap { padding:16px 18px; }
-  #state { font-size:22px; font-weight:700; margin:0 0 6px; }
-  #det { font-size:13px; color:#8b95a3; margin:0 0 4px; }
-  #det b { color:#c8ced8; font-weight:600; }
-  #cache { font-size:12px; color:#5c6672; margin:0 0 10px; min-height:14px; }
-  #cache.cacheok { color:#7fd0a0; }
-  .ok { color:#7fd0a0; } .bad { color:#d08a7f; } .warn { color:#d8c07f; }
-  #brand { text-align:center; padding:8px 10px; background:#0e1116;
-           border-bottom:1px solid #1e2732; }
-  #brand img { width:28px; height:28px; margin-right:8px; border-radius:50%;
-               vertical-align:middle; }
-  #brand b { font-size:15px; font-weight:700; letter-spacing:.14em;
-             color:#e6ebf2; vertical-align:middle; }
+  html, body {
+      margin: 0; padding: 0;
+      background: #0b0d10 url('bg.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #c8ced8;
+      font: 15px/1.45 "Segoe UI", system-ui, sans-serif;
+  }
+  body::before {
+      content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(11, 13, 16, 0.85); z-index: -1;
+  }
+  #brand {
+      text-align: center; padding: 12px 10px; background: rgba(14, 17, 22, 0.9);
+      border-bottom: 1px solid #1e2732; display: flex; align-items: center; justify-content: center; gap: 12px;
+  }
+  #brand img {
+      width: 45px; height: 45px; border-radius: 50%; border: 2px solid #d4af37; object-fit: cover;
+  }
+  #brand b {
+      font-size: 18px; font-weight: 700; letter-spacing: .1em; color: #ffd700;
+  }
+  #wrap { padding: 20px; max-width: 900px; margin: 0 auto; text-align: center; }
+  
+  /* بروفايل زكي */
+  .profile-box {
+      background: rgba(17, 21, 27, 0.85); border: 1px solid #1e2732; border-radius: 12px;
+      padding: 15px; margin-bottom: 20px; display: flex; align-items: center; gap: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+  }
+  .profile-box img {
+      width: 70px; height: 70px; border-radius: 50%; border: 2px solid #00ffcc; object-fit: cover;
+  }
+  .profile-info { text-align: right; }
+  .profile-info h2 { margin: 0 0 5px; color: #fff; font-size: 20px; }
+  .profile-info p { margin: 0; color: #8b95a3; font-size: 13px; }
+
+  #state { font-size: 20px; font-weight: 700; margin: 15px 0 5px; color: #00ffcc; }
+  #det { font-size: 13px; color: #8b95a3; margin: 0 0 5px; }
+  #det b { color: #c8ced8; font-weight: 600; }
+  #cache { font-size: 12px; color: #ffcc00; margin: 0 0 15px; min-height: 14px; }
+  #cache.cacheok { color: #7fd0a0; }
+
+  /* شبكة الألعاب والأزرار */
+  .grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin-top: 20px;
+  }
+  .card {
+      background: rgba(17, 21, 27, 0.9); border: 1px solid #1e2732; border-radius: 8px;
+      overflow: hidden; text-decoration: none; color: inherit; transition: 0.3s; text-align: center;
+  }
+  .card:hover {
+      border-color: #00ffcc; transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,255,204,0.2);
+  }
+  .card img { width: 100%; height: 90px; object-fit: cover; }
+  .card span { display: block; padding: 8px; font-size: 13px; font-weight: 600; color: #e6ebf2; }
+
+  .ok { color: #7fd0a0; } .bad { color: #d08a7f; } .warn { color: #d8c07f; }
 </style>
 </head>
 <body>
-<div id="brand"><img src="logo_raw.png" alt="" width="28" height="28"><b>RAW GAME</b></div>
+
+<div id="brand">
+    <img src="logo_raw.png" alt="Logo">
+    <b>ZAKI GAME ARENA | PLAYSTATION HOST</b>
+</div>
+
 <div id="wrap">
+  <!-- بطاقة التعريف الشخصية -->
+  <div class="profile-box">
+      <img src="profile.jpg" alt="Zakaria">
+      <div class="profile-info">
+          <h2>أهلاً بك، زكي!</h2>
+          <p>PLAYSTATION | PC GAMING | صيانة | فلاش ألعاب</p>
+      </div>
+  </div>
+
   <div id="state">detecting firmware...</div>
   <div id="det"></div>
   <div id="cache"></div>
+
+  <!-- واجهة الألعاب والاختصارات -->
+  <div class="grid">
+      <a class="card" href="run_lapse.html">
+          <img src="gow.jpg" alt="God of War">
+          <span>God of War</span>
+      </a>
+      <a class="card" href="run_lapse.html">
+          <img src="uncharted.jpg" alt="Uncharted">
+          <span>Uncharted 4</span>
+      </a>
+      <a class="card" href="run_lapse.html">
+          <img src="spiderman.jpg" alt="Spider-Man">
+          <span>Spider-Man</span>
+      </a>
+      <a class="card" href="tools.jpg">
+          <img src="tools.jpg" alt="Tools">
+          <span>Tools & Payloads</span>
+      </a>
+  </div>
 </div>
 
 <script>
@@ -53,23 +128,22 @@
     if (forced === "lapse" || forced === "poops") {
         bug = forced; why = "forced via ?bug=" + forced;
     } else if (!key) {
-        why = "user-agent is not a PlayStation 4";
+        why = "user-agent is not a PlayStation 4 (Simulation Mode)";
+        bug = "lapse"; // وضع تجريبي للكمبيوتر
     } else if (fwnum <= 1202) {
         bug = "lapse"; why = key + " <= 12.02";
     } else if (fwnum >= 1250) {
         bug = "poops"; why = key + " >= 12.50";
     } else {
-        why = key + " -- no working bug (lapse ends at 12.02, poops needs 12.50)";
+        why = key + " -- no working bug";
     }
     detEl.innerHTML = "firmware <b>" + (key || "unknown") + "</b>"
         + " &middot; bug <b>" + (bug || "none") + "</b> &middot; " + why;
 
     if (!bug) { setState("UNSUPPORTED FIRMWARE", "bad"); return; }
 
-    var target = (bug === "lapse" ? "run_lapse.html" : "run_poops.html")
-        + location.search;
-    function go() { setState("loading " + bug + " chain...", "warn");
-                    location.replace(target); }
+    var target = (bug === "lapse" ? "run_lapse.html" : "run_poops.html") + location.search;
+    function go() { setState("loading " + bug + " chain...", "warn"); location.replace(target); }
 
     function waitForTap(msg, action) {
         setState(msg, "warn");
@@ -89,22 +163,18 @@
         setCache("offline -- from cache", true);
         go();
     } else if (ac.status === ac.IDLE) {
-        setCache("cached", true);
+        setCache("cached successfully", true);
         go();
     } else if (ac.status === ac.UPDATEREADY) {
         try { ac.swapCache(); } catch (e) {}
         setCache("update downloaded", true);
-        waitForTap("UPDATE READY -- press X or tap to reload & run",
-                   function () { location.reload(); });
+        waitForTap("UPDATE READY -- press X or tap to reload", function () { location.reload(); });
     } else {
         setCache("checking cache...");
-        ac.addEventListener("downloading",
-            function () { setCache("caching for offline (first run)..."); }, false);
+        ac.addEventListener("downloading", function () { setCache("caching for offline (first run)..."); }, false);
         ac.addEventListener("progress", function (e) {
-            if (e && e.total)
-                setCache("caching " + Math.round((e.loaded / e.total) * 100) + "%");
+            if (e && e.total) setCache("caching " + Math.round((e.loaded / e.total) * 100) + "%");
         }, false);
-
         ac.addEventListener("cached", function () {
             setCache("cached for offline use", true);
             waitForTap("CACHED (first run) -- press X or tap to run", go);
@@ -112,10 +182,8 @@
         ac.addEventListener("updateready", function () {
             try { ac.swapCache(); } catch (e) {}
             setCache("update downloaded", true);
-            waitForTap("UPDATE READY -- press X or tap to reload & run",
-                       function () { location.reload(); });
+            waitForTap("UPDATE READY -- press X or tap to reload", function () { location.reload(); });
         }, false);
-
         ac.addEventListener("noupdate", function () {
             setCache("cached -- offline ready", true);
             go();
